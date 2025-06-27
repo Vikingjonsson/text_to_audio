@@ -1,12 +1,13 @@
 import os
 
 from dotenv import load_dotenv
+from elevenlabs import Voice
 from elevenlabs.client import ElevenLabs
 
 load_dotenv()
 
 
-def list_elevenlabs_voices():
+def list_elevenlabs_voices() -> list[Voice]:
     """
     List all available Eleven Labs voices.
     :return: List of available voices from Eleven Labs.
@@ -52,7 +53,7 @@ def get_voice_id_by_name(client: ElevenLabs, voice_name: str) -> str | None:
         return None
 
 
-def select_voice():
+def select_voice() -> str | None:
     """
     Display available voices and let user select one.
     :return: Selected voice name or None if cancelled.

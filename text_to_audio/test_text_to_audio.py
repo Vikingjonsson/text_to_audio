@@ -47,9 +47,7 @@ class TestTextToAudio(unittest.TestCase):
     def test_save_text_as_audio_file_no_api_key(self, mock_getenv, mock_load_dotenv):
         """Test handling of missing API key."""
         mock_getenv.return_value = None
-
         result = save_text_as_audio_file("Hello world!", "test.mp3")
-
         self.assertFalse(result)
 
     @patch("text_to_audio.text_to_audio.os.getenv")
@@ -63,7 +61,6 @@ class TestTextToAudio(unittest.TestCase):
         mock_client = Mock()
         mock_elevenlabs_class.return_value = mock_client
         mock_get_voice_id.return_value = None
-
         mock_voice = Mock()
         mock_voice.voice_id = "fallback_voice_123"
         mock_voice.name = "Default Voice"
@@ -95,7 +92,6 @@ class TestTextToAudio(unittest.TestCase):
         mock_client.voices.get_all.return_value = mock_voices_response
 
         result = get_voice_id_by_name(mock_client, "Rachel")
-
         self.assertEqual(result, "voice_123")
 
     def test_get_voice_id_by_name_case_insensitive(self, mock_load_dotenv):
@@ -109,7 +105,6 @@ class TestTextToAudio(unittest.TestCase):
         mock_client.voices.get_all.return_value = mock_voices_response
 
         result = get_voice_id_by_name(mock_client, "RACHEL")
-
         self.assertEqual(result, "voice_123")
 
     def test_get_voice_id_by_name_not_found(self, mock_load_dotenv):
@@ -123,7 +118,6 @@ class TestTextToAudio(unittest.TestCase):
         mock_client.voices.get_all.return_value = mock_voices_response
 
         result = get_voice_id_by_name(mock_client, "Rachel")
-
         self.assertIsNone(result)
 
     def test_get_voice_id_by_name_none_name(self, mock_load_dotenv):
@@ -137,7 +131,6 @@ class TestTextToAudio(unittest.TestCase):
         mock_client.voices.get_all.return_value = mock_voices_response
 
         result = get_voice_id_by_name(mock_client, "Rachel")
-
         self.assertIsNone(result)
 
     @patch("text_to_audio.text_to_audio.os.getenv")
@@ -149,23 +142,19 @@ class TestTextToAudio(unittest.TestCase):
         mock_getenv.return_value = "test_api_key"
         mock_client = Mock()
         mock_elevenlabs_class.return_value = mock_client
-
         mock_voice1 = Mock()
         mock_voice1.name = "Rachel"
         mock_voice1.voice_id = "voice_123"
         mock_voice1.category = "premade"
-
         mock_voice2 = Mock()
         mock_voice2.name = "Liam"
         mock_voice2.voice_id = "voice_456"
         mock_voice2.category = "premade"
-
         mock_voices_response = Mock()
         mock_voices_response.voices = [mock_voice1, mock_voice2]
         mock_client.voices.get_all.return_value = mock_voices_response
 
         result = list_elevenlabs_voices()
-
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0].name, "Rachel")
         self.assertEqual(result[1].name, "Liam")
@@ -181,6 +170,7 @@ class TestTextToAudio(unittest.TestCase):
     def test_select_voice_no_voices(self, mock_elevenlabs_voices, mock_load_dotenv):
         """Test selecting voice when no voices are available."""
         mock_elevenlabs_voices.return_value = []
+
         result = select_voice()
         self.assertEqual(result, "Rachel")
 
@@ -190,7 +180,6 @@ class TestTextToAudio(unittest.TestCase):
         self, mock_print, mock_elevenlabs_voices, mock_load_dotenv
     ):
         """Test selecting voice when voices are available."""
-        # Create mock voices with proper attributes
         mock_voice1 = Mock()
         mock_voice1.configure_mock(
             name="Rachel",
@@ -198,7 +187,6 @@ class TestTextToAudio(unittest.TestCase):
             category="premade",
             description="Female voice",
         )
-
         mock_voice2 = Mock()
         mock_voice2.configure_mock(
             name="Liam",
@@ -209,20 +197,17 @@ class TestTextToAudio(unittest.TestCase):
 
         mock_elevenlabs_voices.return_value = [mock_voice1, mock_voice2]
 
-        # Test selecting first voice
         with patch("builtins.input", return_value="1"):
             result = select_voice()
             self.assertEqual(result, "Rachel")
 
-        # Test selecting second voice
         with patch("builtins.input", return_value="2"):
             result = select_voice()
             self.assertEqual(result, "Liam")
 
-        # Test default selection (empty input)
         with patch("builtins.input", return_value=""):
             result = select_voice()
-            self.assertEqual(result, "Rachel")  # Should return first voice as default
+            self.assertEqual(result, "Rachel")
 
     @patch("text_to_audio.text_to_audio.list_elevenlabs_voices")
     @patch("builtins.print")
@@ -236,12 +221,10 @@ class TestTextToAudio(unittest.TestCase):
         )
         mock_elevenlabs_voices.return_value = [mock_voice]
 
-        # Test invalid input (out of range) then valid input
         with patch("builtins.input", side_effect=["5", "1"]):
             result = select_voice()
             self.assertEqual(result, "Rachel")
 
-        # Test invalid input (non-numeric) then valid input
         with patch("builtins.input", side_effect=["abc", "1"]):
             result = select_voice()
             self.assertEqual(result, "Rachel")
