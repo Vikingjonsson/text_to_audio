@@ -1,19 +1,9 @@
-import os
-
-from dotenv import load_dotenv
 from elevenlabs import Voice
 from elevenlabs.client import ElevenLabs
 
-load_dotenv()
 
-
-def list_elevenlabs_voices() -> list[Voice]:
-    """
-    List all available Eleven Labs voices.
-    :return: List of available voices from Eleven Labs.
-    """
+def list_elevenlabs_voices(api_key: str | None = None) -> list[Voice]:
     try:
-        api_key = os.getenv("elevenlabs_api_key")
 
         if not api_key:
             return []
@@ -36,12 +26,6 @@ def list_elevenlabs_voices() -> list[Voice]:
 
 
 def get_voice_id_by_name(client: ElevenLabs, voice_name: str) -> str | None:
-    """
-    Get the voice ID for a given voice name.
-    :param client: ElevenLabs client instance.
-    :param voice_name: The name of the voice to find.
-    :return: Voice ID if found, None otherwise.
-    """
     try:
         available_voices = client.voices.get_all()
         for voice in available_voices.voices:
@@ -53,13 +37,9 @@ def get_voice_id_by_name(client: ElevenLabs, voice_name: str) -> str | None:
         return None
 
 
-def select_voice() -> str | None:
-    """
-    Display available voices and let user select one.
-    :return: Selected voice name or None if cancelled.
-    """
+def select_voice(api_key: str) -> str | None:
     print("Available Eleven Labs Voices:\n")
-    voices = list_elevenlabs_voices()
+    voices = list_elevenlabs_voices(api_key)
 
     if not voices:
         print("❌ No voices available. Using default.")
@@ -96,16 +76,10 @@ def select_voice() -> str | None:
             return None
 
 
-def save_text_as_audio_file(text: str, filename: str, voice_name: str = "Rachel"):
-    """
-    Convert text to audio using Eleven Labs and save as MP3 file without playing.
-    :param text: The string to be converted to audio.
-    :param filename: The filename to save the audio (e.g., "output.mp3").
-    :param voice_name: The name of the Eleven Labs voice to use (default: "Rachel").
-    :return: True if successful, False otherwise.
-    """
+def save_text_as_audio_file(
+    api_key: str, text: str, filename: str, voice_name: str = "Rachel"
+):
     try:
-        api_key = os.getenv("elevenlabs_api_key")
         if not api_key:
             raise ValueError("Eleven Labs API key not found in environment variables")
 
