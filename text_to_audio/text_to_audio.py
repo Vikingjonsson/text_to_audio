@@ -1,7 +1,7 @@
 import os
 
-from dotenv import load_dotenv  # noqa: E402
-from elevenlabs.client import ElevenLabs  # noqa: E402
+from dotenv import load_dotenv
+from elevenlabs.client import ElevenLabs
 
 load_dotenv()
 
