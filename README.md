@@ -1,10 +1,10 @@
 # Text to Audio Converter
 
-A Python application that converts text to high-quality audio using the Eleven Labs AI voice synthesis API. This project provides both a command-line interface for interactive voice selection and a programmatic API for text-to-speech conversion.
+A Python application that converts text to audio using the Eleven Labs AI voice synthesis API.
 
 ## Features
 
-- High-Quality AI Voices: Uses Eleven Labs API for natural-sounding speech
+- AI Voices: Uses Eleven Labs API for natural-sounding speech
 - Voice Selection: Voice selection from available Eleven Labs voices
 - Audio File Export: Save generated audio as MP3 files
 
