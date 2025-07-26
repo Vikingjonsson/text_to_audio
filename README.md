@@ -20,7 +20,7 @@ A Python application that converts text to audio using the Eleven Labs AI voice 
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd play_text_as_audio
+   cd text_as_audio
    ```
 
 2. **Create and activate a virtual environment:**
