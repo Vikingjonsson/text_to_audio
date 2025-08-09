@@ -11,13 +11,6 @@ def list_elevenlabs_voices(api_key: str | None = None) -> list[Voice]:
         client = ElevenLabs(api_key=api_key)
         available_voices = client.voices.get_all()
 
-        print("Available Eleven Labs voices:")
-        for voice in available_voices.voices:
-            print(f"- {voice.name} (ID: {voice.voice_id})")
-            print(f"  Category: {voice.category}")
-            print(f"  Description: {getattr(voice, 'description', 'No description')}")
-            print()
-
         return available_voices.voices
 
     except Exception as e:
@@ -35,45 +28,6 @@ def get_voice_id_by_name(client: ElevenLabs, voice_name: str) -> str | None:
 
     except Exception:
         return None
-
-
-def select_voice(api_key: str) -> str | None:
-    print("Available Eleven Labs Voices:\n")
-    voices = list_elevenlabs_voices(api_key)
-
-    if not voices:
-        print("❌ No voices available. Using default.")
-        return "Rachel"
-
-    print(f"Found {len(voices)} available voices:")
-    for i, voice in enumerate(voices, 1):
-        print(f"{i}. {voice.name} ({voice.category})")
-        if hasattr(voice, "description") and voice.description:
-            print(f"Description: {voice.description}")
-
-    while True:
-        try:
-            choice = input(
-                f"\nSelect a voice (1-{len(voices)}) or press Enter for default: "
-            ).strip()
-
-            if not choice:
-                return voices[0].name if voices else "Rachel"
-
-            choice_num = int(choice)
-            if 1 <= choice_num <= len(voices):
-                voice_index = choice_num - 1
-                selected_voice = voices[voice_index]
-                print(f"✅ Selected: {selected_voice.name}")
-                return selected_voice.name
-            else:
-                print(f"❌ Please enter a number between 1 and {len(voices)}")
-
-        except ValueError:
-            print("❌ Please enter a valid number")
-        except KeyboardInterrupt:
-            print("\n⚠️  Cancelled by user")
-            return None
 
 
 def save_text_as_audio_file(
