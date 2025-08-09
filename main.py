@@ -1,19 +1,28 @@
+import argparse
 import os
 
 from dotenv import load_dotenv
 
-from text_to_audio.text_to_audio import save_text_as_audio_file, select_voice
+from text_to_audio.text_to_audio import list_elevenlabs_voices, save_text_as_audio_file
 
 load_dotenv()
 
 
 def main():
-    api_key = os.getenv("elevenlabs_api_key")
-    text = "Hello, this is a test of the audio playback system with AI voice."
+    parser = argparse.ArgumentParser(
+        description="Convert text to audio using Eleven Labs API."
+    )
+    parser.add_argument(
+        "--voice", type=str, help="The name of the voice to use.", default=None
+    )
+    args = parser.parse_args()
 
-    voice_name = select_voice(api_key)
+    api_key = os.getenv("elevenlabs_api_key")
+
+    voice_name = args.voice
+
     if not voice_name:
-        print("No voice selected. Exiting.")
+        list_elevenlabs_voices(api_key)
         return
 
     try:
@@ -23,6 +32,7 @@ def main():
         if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir, exist_ok=True)
 
+        text = f"Hello, my name is {voice_name}, and this is a test of Eleven Labs text to speech feature."
         success = save_text_as_audio_file(
             api_key, text, output_path, voice_name=voice_name
         )
