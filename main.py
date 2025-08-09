@@ -1,7 +1,8 @@
-import argparse
 import os
 
 from dotenv import load_dotenv
+from InquirerPy import inquirer
+from InquirerPy.base.control import Choice
 
 from text_to_audio.text_to_audio import list_elevenlabs_voices, save_text_as_audio_file
 
@@ -9,20 +10,26 @@ load_dotenv()
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Convert text to audio using Eleven Labs API."
-    )
-    parser.add_argument(
-        "--voice", type=str, help="The name of the voice to use.", default=None
-    )
-    args = parser.parse_args()
-
     api_key = os.getenv("elevenlabs_api_key")
+    if not api_key:
+        print("Error: elevenlabs_api_key not found in .env file")
+        return
 
-    voice_name = args.voice
+    voices = list_elevenlabs_voices(api_key)
+    if not voices:
+        print("Error: No voices found.")
+        return
+
+    voice_choices = [Choice(voice.name) for voice in voices]
+
+    voice_name = inquirer.select(
+        message="Select a voice:",
+        choices=voice_choices,
+        default=voice_choices[0],
+    ).execute()
 
     if not voice_name:
-        list_elevenlabs_voices(api_key)
+        print("No voice selected. Exiting.")
         return
 
     try:
